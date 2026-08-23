@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://api-dev.stackblaze.cloud/api/iac/blueprint/schema
+#
+# StackBlaze IaC blueprint — deploys this Rails app + a Postgres database.
+# Applied with: POST /api/iac/blueprint/apply (or synced on push once the
+# repo is bound to the pipeline).
+
+pipeline: rapid-river-stg2
+
+services:
+  - name: rails-demo
+    type: web
+    runtime: ruby
+    port: 8080
+    domain: rails-demo-7431.shared-dev-1-a.stackblaze.app
+    healthCheckPath: /
+    startCommand: bundle exec rake db:prepare && bundle exec puma -C config/puma.rb
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: RAILS_ENV
+        value: production
+      - key: RAILS_LOG_TO_STDOUT
+        value: enabled
+      - key: RAILS_SERVE_STATIC_FILES
+        value: enabled
+      - key: WEB_CONCURRENCY
+        value: "1"
+      - key: SECRET_KEY_BASE
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rails-db
+          property: connectionString
+
+databases:
+  - name: rails-db
+    type: postgres
+    databaseName: railsdemo
+    user: railsdemo
