@@ -14,9 +14,17 @@ services:
     domain: rails-demo-7431.shared-dev-1-a.stackblaze.app
     healthCheckPath: /
     startCommand: bundle exec rake db:prepare && bundle exec puma -C config/puma.rb
+    disk:
+      name: rails-storage
+      mountPath: /app/storage
+      sizeGB: 1
     envVars:
       - key: IAC_SYNC_MARKER
-        value: push-5
+        value: push-6
+      - key: REDIS_URL
+        fromDatabase:
+          name: rails-cache
+          property: connectionString
       - key: PORT
         value: "8080"
       - key: RAILS_ENV
@@ -39,3 +47,5 @@ databases:
     type: postgres
     databaseName: railsdemo
     user: railsdemo
+  - name: rails-cache
+    type: valkey
