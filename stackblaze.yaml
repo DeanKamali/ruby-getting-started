@@ -9,7 +9,7 @@ pipeline: rapid-river-stg2
 services:
   - name: rails-demo
     type: web
-    runtime: ruby
+    runtime: docker
     port: 8080
     domain: rails-demo-7431.shared-dev-1-a.stackblaze.app
     healthCheckPath: /
