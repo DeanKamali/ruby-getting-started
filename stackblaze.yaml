@@ -15,6 +15,8 @@ services:
     healthCheckPath: /
     startCommand: bundle exec rake db:prepare && bundle exec puma -C config/puma.rb
     envVars:
+      - key: IAC_SYNC_MARKER
+        value: push-1
       - key: PORT
         value: "8080"
       - key: RAILS_ENV
